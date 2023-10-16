@@ -25,13 +25,9 @@
             {
                 taskList.Add(GetContentAsync(url));
             });
-            var contents = Task.WhenAll(taskList.ToArray());
-            await Console.Out.WriteLineAsync("WhenAll sonrası gerçekleşen  methodlar.");
-            var data = await contents;
-            data.ToList().ForEach(task =>
-            {
-                Console.WriteLine($"{task.Site} Length: {task.Length}");
-            });
+            
+            var firstData = await Task.WhenAny(taskList);
+            Console.WriteLine(firstData.Result.Site);
 
         }
         public static async Task<Content> GetContentAsync(string url)
