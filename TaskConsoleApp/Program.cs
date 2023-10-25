@@ -26,13 +26,19 @@
                 taskList.Add(GetContentAsync(url));
             });
 
-            int firstTaskIndex = Task.WaitAny(taskList.ToArray());
-            Console.WriteLine($"{taskList[firstTaskIndex].Result.Site}");
+            var contents = await Task.WhenAll(taskList.ToArray());
+            contents.ToList().ForEach(task =>
+            {
+                Console.WriteLine(task.Site);
+            });
         }
         public static async Task<Content> GetContentAsync(string url)
         {
             Content content = new Content();
             var data = await new HttpClient().GetStringAsync(url);
+
+            await Task.Delay(5000);
+
             content.Site = url;
             content.Length = data.Length;
             await Console.Out.WriteLineAsync("GetContentAsync thread:" + Thread.CurrentThread.ManagedThreadId);
