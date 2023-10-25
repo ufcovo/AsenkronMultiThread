@@ -26,15 +26,8 @@
                 taskList.Add(GetContentAsync(url));
             });
 
-            Console.WriteLine("Before WaitAll");
-            Task.WaitAll(taskList.ToArray());
-
-            bool isDone = Task.WaitAll(taskList.ToArray(), 3000);
-            Console.WriteLine($"Is it 3 sec: {isDone}");
-
-
-            Console.WriteLine("After WaitAll");
-            Console.WriteLine($"{taskList.First().Result.Site}");
+            int firstTaskIndex = Task.WaitAny(taskList.ToArray());
+            Console.WriteLine($"{taskList[firstTaskIndex].Result.Site}");
         }
         public static async Task<Content> GetContentAsync(string url)
         {
